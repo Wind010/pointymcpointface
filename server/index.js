@@ -5,7 +5,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // Routes
-const planningPokerRoutes = require('./server/routes/planningPokerRoutes');
+const planningPokerRoutes = require('./routes/planningPokerRoutes');
 app.use('/planningpoker', planningPokerRoutes);
 
 const PORT = process.env.PORT || 3000;

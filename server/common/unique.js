@@ -2,7 +2,13 @@
 const HexUpperOnly = "0123456789ABCDEF"
 const HEX_MIXEDCASE = '0123456789ABCDEFabcdef';
 
-function randomCharactersFromArray(charactersArray, length) {
+/**
+ * Create a random string of passed in length and character set.
+ * @param {string} - The character set to use.
+ * @param {int} - The length of ID.
+ * @returns {string} - The length of ID.
+ */
+function generateRandomId(charactersArray, length) {
     const randomString = Array.from({ length }, () => {
       const randomIndex = Math.floor(Math.random() * charactersArray.length);
       return charactersArray[randomIndex];
@@ -12,7 +18,6 @@ function randomCharactersFromArray(charactersArray, length) {
   }
   
   
-module.exports = {HexUpperOnly, HEX_MIXEDCASE, randomCharactersFromArray};
-
+module.exports = {HexUpperOnly, HEX_MIXEDCASE, randomCharactersFromArray: generateRandomId};
 
 
