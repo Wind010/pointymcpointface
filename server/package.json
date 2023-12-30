@@ -1,0 +1,24 @@
+{
+  "name": "pointymcpokerface",
+  "version": "1.0.0",
+  "description": "A PoC Planning Poker App",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --testPathPattern=*/tests/*"
+  },
+  "keywords": [
+    "planning",
+    "poker",
+    "pointing",
+    "estimation"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "^4.18.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
