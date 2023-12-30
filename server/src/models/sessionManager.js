@@ -1,5 +1,6 @@
 const unique = require('../common/unique');
-const session = require('./session.js');
+const Session = require('./session');
+const config = require('../../config');
 
 /**
  * Singleton that manages sessions.
@@ -22,32 +23,33 @@ class SessionManager {
 
 
     /**
-     * Create a new session and add it to the sessions array.
-     * @param {string} sessionId - The ID for the new session.
+     * Create a new session and add it to the sessions hashtable.
+     * @param {string} name - The name for the new session. 
+     * @param {string} id - The ID for the new session.
      * @returns {Object} - The created session.
      */
-    createSession(sessionId) {
-        if (sessionId === null) {
-            sessionId = unique.randomCharactersFromArray()
+    createSession(name, id) {
+        if (id === null) {
+            id = unique.generateRandomId(config.idCharacterSet, config.sessionIdLength);
         }
 
-        if (this.sessions[sessionId]) {
+        if (this.sessions[id]) {
             throw new Error('Session ID already exists.');
         }
 
-        const newSession = new session.Session();
-        this.sessions[sessionId] = { id: newSession };
+        const newSession = new Session(id, name);
+        this.sessions[id] = { id: newSession };
         return newSession;
     }
 
 
     /**
      * Retrieve a session by its ID.
-     * @param {string} sessionId - The ID of the session to retrieve.
+     * @param {string} id - The ID of the session to retrieve.
      * @returns {Object|undefined} - The session object if found, otherwise undefined.
      */
-    getSessionById(sessionId) {
-        return this.sessions[sessionId];
+    getSessionById(id) {
+        return this.sessions[id];
     }
     
 }

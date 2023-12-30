@@ -1,0 +1,7 @@
+{
+    "jest.pathToJest": "functions/node_modules/.bin/jest",
+    "jest.autoEnable": false,
+    "cSpell.words": [
+        "hashtable"
+    ]
+}

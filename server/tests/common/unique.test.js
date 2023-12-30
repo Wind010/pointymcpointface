@@ -1,4 +1,4 @@
-const unique = require('../../../server/common/unique');
+const unique = require('../../src/common/unique');
 
 describe('generateRandomId', () => {
     it('Should generate a string of the specified length using upper-case hexadecimal character set', () => {

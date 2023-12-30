@@ -1,4 +1,4 @@
-const encoders = require('../../../server/common/encoders');
+const encoders = require('../../src/common/encoders');
 
 describe('Base58 Encoding', () => {
   it('Should encode a number to Base58', () => {
@@ -6,15 +6,6 @@ describe('Base58 Encoding', () => {
     const expectedEncodedValue = 'RVu1HWU5';
 
     const encoded = encoders.base58Encode(input);
-    expect(encoded).toBe(expectedEncodedValue);
-  });
-
-
-  it('Should encode a number to Base58', () => {
-    const input = 123456;
-    const expectedEncodedValue = 'RVu1HWU5';
-
-    const encoded = encoders.generateShortGUID();
     expect(encoded).toBe(expectedEncodedValue);
   });
 

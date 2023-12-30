@@ -18,6 +18,6 @@ function generateRandomId(charactersArray, length) {
   }
   
   
-module.exports = {HexUpperOnly, HEX_MIXEDCASE, randomCharactersFromArray: generateRandomId};
+module.exports = {HexUpperOnly, HEX_MIXEDCASE, generateRandomId};
 
 

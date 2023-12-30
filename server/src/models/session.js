@@ -3,7 +3,7 @@ const roles = require('./roles'); // Import roles enumeration
 
 
 class Session {
-    constructor(id, name, description) {
+    constructor(id, name, description="") {
       this.id = id;
       this.name = name;
       this.description = description;
@@ -16,7 +16,7 @@ class Session {
     }
   
     addUser(user) {
-      this.users.push(user);
+      this.users[user.id] = user;
     }
 
     removeUser(userId) {

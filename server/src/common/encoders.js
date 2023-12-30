@@ -58,7 +58,7 @@ function base58Decode(input) {
 
 
 
-module.exports = {base58Encode, base58Decode, generateShortGUID};
+module.exports = {base58Encode, base58Decode};
 
 
 
