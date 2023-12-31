@@ -1,6 +1,7 @@
 const SessionManager = require('../models/sessionManager');
 const {Session} = require('../models/session');
-const {User} = require('../models/user');
+const UserManager = require('../models/userManager');
+const User = require('../models/user');
 
 
 /**
@@ -15,9 +16,12 @@ exports.createSession = async (req, res) => {
   }
 
   id = null; // Empty it out for now.
+  
+  const userId = req.body.userId;
+  const user = UserManager.getInstance().getUserById(userId);
 
   const { name, description } = req.body;
-  const session = SessionManager.getInstance().createSession(name, id);
+  const session = SessionManager.getInstance().createSession(name, user, id);
   // Save the session to a data store or memory
   res.status(201).json({ message: 'Session created successfully', id: session.id });
 };
@@ -29,24 +33,46 @@ exports.createSession = async (req, res) => {
  * @param {Response} res - Express response object.
  */
 exports.joinSession = (req, res) => {
-  const { sessionId } = req.params;  // Destructure just sessionId.
+  const id = req.params.id;
+  const userId = req.body.userId;
   
-  let user;
-  try {
-    user = JSON.parse(req.body);
-  } catch (error) {
-    // Handle the parsing error gracefully
-    console.error('Error parsing JSON:', error);
-    // Optionally, you might send an error response to the client or handle it accordingly
-    return res.status(400).json({ error: 'Invalid JSON' });
+  const user = UserManager.getInstance().getUserById(userId);
+  
+  if (! user) {
+    res.status(404).json({message: 'User not found' });
   }
-  
-  const session = SessionManager.getInstance().getSessionById(sessionId);
 
+  const session = SessionManager.getInstance().getSessionById(id);
 
   if (session) {
     session.addUser(user);
-    res.status(200).json({ message: `${User.name} joined session successfully`, sessionId });
+    res.status(200).json({ message: `${user.name} joined session successfully`, id });
+  } else {
+    res.status(404).json({ message: 'Session not found' });
+  }
+};
+
+
+
+/**
+ * Estimates a story/item within a planning poker session.
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ */
+exports.estimate = (req, res) => {
+  const id = req.params.id;
+  const { userId, estimate } = req.body;
+  
+  const user = UserManager.getInstance().getUserById(userId);
+  if (! user) {
+    res.status(404).json({message: 'User not found' });
+  }
+
+  const session = SessionManager.getInstance().getSessionById(id);
+  
+  if (session) {
+    user.setEstimate(estimate);
+    res.status(200).json({ message: 'Story estimated successfully' });
   } else {
     res.status(404).json({ message: 'Session not found' });
   }
@@ -72,4 +98,3 @@ exports.revealEstimates = (req, res) => {
     res.status(404).json({ message: 'Session not found' });
   }
 };
-

@@ -1,6 +1,4 @@
-const unique = require('../common/unique');
 const Session = require('./session');
-const config = require('../../config');
 
 /**
  * Singleton that manages sessions.
@@ -14,6 +12,10 @@ class SessionManager {
         this.sessions = {};
     }
 
+    /**
+     * Create or retrieve existing session.
+     * @returns {Session} - The session object if found, otherwise undefined.
+    */
     static getInstance() {
         if (! SessionManager.instance) {
             SessionManager.instance = new SessionManager();
@@ -24,21 +26,21 @@ class SessionManager {
 
     /**
      * Create a new session and add it to the sessions hashtable.
-     * @param {string} name - The name for the new session. 
+     * @param {string} name - The name for the new session.
+     * @param {string} userId - The userId for the creator of the session.
      * @param {string} id - The ID for the new session.
-     * @returns {Object} - The created session.
+     * @returns {Session} - The created session.
      */
-    createSession(name, id) {
-        if (id === null) {
-            id = unique.generateRandomId(config.idCharacterSet, config.sessionIdLength);
-        }
-
+    createSession(name, user, id=null) {
         if (this.sessions[id]) {
             throw new Error('Session ID already exists.');
         }
-
-        const newSession = new Session(id, name);
-        this.sessions[id] = { id: newSession };
+        
+        // Layer above should have already validated userId.
+        
+        const newSession = new Session(id, user, name);
+        id = newSession.id;
+        this.sessions[id] = newSession;
         return newSession;
     }
 
@@ -46,7 +48,7 @@ class SessionManager {
     /**
      * Retrieve a session by its ID.
      * @param {string} id - The ID of the session to retrieve.
-     * @returns {Object|undefined} - The session object if found, otherwise undefined.
+     * @returns {Session|undefined} - The session object if found, otherwise undefined.
      */
     getSessionById(id) {
         return this.sessions[id];

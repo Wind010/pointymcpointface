@@ -1,7 +1,7 @@
-const roles = {
+const Roles = {
     CREATOR: 'Creator',
     OBSERVER: 'Observer',
     USER: 'User',
-  };
+};
   
-  module.exports = roles;
+module.exports = Roles;

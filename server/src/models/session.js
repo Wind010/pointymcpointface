@@ -1,10 +1,18 @@
-// Session.js - Sample model for a Planning Poker session
-const roles = require('./roles'); // Import roles enumeration
+const config = require('../../config');
+const Roles = require('./roles'); // Import roles enumeration
+const unique = require('../common/unique');
 
 
 class Session {
-    constructor(id, name, description="") {
-      this.id = id;
+    constructor(id, user, name, description="") {
+      this.id = id ?? unique.generateRandomId(config.idCharacterSet, config.sessionIdLength);
+      
+      if (! user) {
+        throw new Error("UserId is required.");
+      }
+      
+      user.assignRole(Roles.CREATOR);
+      this.owner = user;
       this.name = name;
       this.description = description;
       this.story = null;
@@ -24,7 +32,8 @@ class Session {
     }
 
     addEstimate(userId) {
-      this.user[userId].addEstimate()
+      // Could block Creator/Owner from estimating based off config.
+      this.user[userId].estimate()
     }
 
     getUsersWithEstimations() {
@@ -35,6 +44,8 @@ class Session {
       if (this.users.length === 0) {
         throw new Error('No users in the session.');
       }
+
+      // Could filter Creator/Owner from estimations based off config.
   
       const usersWithEstimates = this.users.filter(user => user.estimate !== null);
       return usersWithEstimates.length === this.users.length;
