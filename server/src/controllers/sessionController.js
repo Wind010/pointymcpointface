@@ -19,10 +19,15 @@ exports.createSession = async (req, res) => {
   const userId = req.body.userId;
   const user = UserManager.getInstance().getUserById(userId);
 
+  if (! user) {
+    res.status(404).json({message: 'User not found' });
+    return;
+  }
+
   const { name, description } = req.body;
   const session = SessionManager.getInstance().createSession(name, user, id);
   // Save the session to a data store or memory
-  res.status(201).json({ message: 'Session created successfully', id: session.id });
+  res.status(201).json({ message: 'Session created successfully', id: session.id, name: name });
 };
 
 
@@ -39,6 +44,7 @@ exports.joinSession = (req, res) => {
   
   if (! user) {
     res.status(404).json({message: 'User not found' });
+    return;
   }
 
   const session = SessionManager.getInstance().getSessionById(id);
