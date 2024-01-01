@@ -8,11 +8,10 @@ router.post('/', sessionController.createSession);
 // Route to join a session
 router.put('/:id', sessionController.joinSession);
 
-// Route to reveal item estimates
-router.get('/:id/reveal', sessionController.revealEstimates);
-
 // Route to estimate a item
 router.post('/:id/estimate', sessionController.estimate);
 
+// Route to reveal item estimates
+router.get('/:id/reveal', sessionController.revealEstimates);
 
 module.exports = router;

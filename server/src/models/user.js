@@ -3,6 +3,7 @@ const Roles = require('./roles'); // Import roles enumeration
 const unique = require('../common/unique');
 const {isValidPoint} = require('./points')
 
+const InvalidPointsValue = "Invalid points value!"
 
 class User {
     constructor(name, email='', role = Roles.USER) {
@@ -27,9 +28,16 @@ class User {
     }
   
     setEstimate(estimate) {
-      if (isValidPoint(estimate) && (this.role == Roles.USER)) {
-        this.estimate = estimate;
+      if (! isValidPoint(estimate)) {
+        throw new RangeError('Invalid points value!')
       }
+ 
+      if (this.role === Roles.OBSERVER) {
+        console.log(`Roles was set to ${this.role}.  No estimate set.`);
+        return;
+      }
+      
+      this.estimate = estimate;
     }
 
     assignRole(role) {
@@ -50,4 +58,4 @@ class User {
     }
   }
   
-  module.exports = User;
+  module.exports = {User, InvalidPointsValue};

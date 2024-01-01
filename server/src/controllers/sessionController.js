@@ -86,14 +86,15 @@ exports.estimate = (req, res) => {
  * @param {Response} res - Express response object.
  */
 exports.revealEstimates = (req, res) => {
-  const { sessionId, storyId } = req.params;
+  const { sessionId } = req.params;
  
   const session = SessionManager.getInstance().getSessionById(sessionId);
 
   if (session) {
     const estimates = session.revealEstimates();
 
-    res.status(200).json({ message: 'Estimates revealed successfully', storyId, estimates });
+
+    res.status(200).json({ message: 'Estimates revealed successfully', estimates, average: });
   } else {
     res.status(404).json({ message: 'Session not found' });
   }

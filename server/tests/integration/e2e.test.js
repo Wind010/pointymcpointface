@@ -67,22 +67,19 @@ describe('Planning Poker API Endpoints', () => {
     const expectedPoints = 3;
     const response = await request(app)
       .post(`/api/session/${sessionId}/estimate/`)
+      .set('Content-Type', 'application/json')
       .send({"userId": userId, points: expectedPoints});
 
     expect(response.statusCode).toBe(200); 
   });
-  
-
-  // it('Should reveal task estimates', async () => {
-  //   const sessionId = 'yourSessionId'; // Replace with an actual session ID
-  //   const taskId = 'yourTaskId'; // Replace with an actual task ID
-  //   const response = await request(app)
-  //     .get(`/revealEstimates/${sessionId}/${taskId}`);
-
-  //   expect(response.statusCode).toBe(200); 
-  // });
 
 
+  it('Should reveal task estimates', async () => {
+    const response = await request(app)
+      .get(`/revealEstimates/${sessionId}`);
+
+    expect(response.statusCode).toBe(200); 
+  });
  
 
 }, 30000);
