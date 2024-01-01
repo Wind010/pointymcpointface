@@ -8,6 +8,9 @@ router.post('/', sessionController.createSession);
 // Route to join a session
 router.put('/:id', sessionController.joinSession);
 
+// Route to join a session
+router.put('/:id/story', sessionController.setStory);
+
 // Route to estimate a item
 router.post('/:id/estimate', sessionController.estimate);
 

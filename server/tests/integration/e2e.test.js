@@ -7,8 +7,8 @@ let userId = "";
 let sessionId = "";
 
 /**
- * API Tests - These tests must be run with --runInBand
- *
+ * API Tests - These tests must be run with --runInBand since the tests are sequential.
+ * Run or debug from the top level describe.
  * @group integration
  * @group e2e
  */
@@ -53,6 +53,16 @@ describe('Planning Poker API Endpoints', () => {
   }); 
 
 
+  it('Should add story to session', async () => {
+    const response = await request(app)
+      .put(`/api/session/${sessionId}/story`)
+      .set('Content-Type', 'application/json')
+      .send({"name": "SomeStory", "description": "Just do it!"});
+
+    expect(response.statusCode).toBe(200);
+  });
+
+
   it('Should join user to existing session', async () => {
     const response = await request(app)
       .put(`/api/session/${sessionId}`)
@@ -66,9 +76,9 @@ describe('Planning Poker API Endpoints', () => {
   it('Should estimate a story/item with user for 3 points', async () => {
     const expectedPoints = 3;
     const response = await request(app)
-      .post(`/api/session/${sessionId}/estimate/`)
+      .post(`/api/session/${sessionId}/estimate`)
       .set('Content-Type', 'application/json')
-      .send({"userId": userId, points: expectedPoints});
+      .send({"userId": userId, estimate: expectedPoints});
 
     expect(response.statusCode).toBe(200); 
   });
@@ -76,7 +86,7 @@ describe('Planning Poker API Endpoints', () => {
 
   it('Should reveal task estimates', async () => {
     const response = await request(app)
-      .get(`/revealEstimates/${sessionId}`);
+      .get(`/api/session/${sessionId}/reveal`);
 
     expect(response.statusCode).toBe(200); 
   });

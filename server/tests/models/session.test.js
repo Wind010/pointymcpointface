@@ -1,5 +1,7 @@
 const Session = require('../../src/models/session');
 const {User, InvalidPointsValue} = require('../../src/models/user');
+const Story = require('../../src/models/story');
+
 
 describe('Session Class', () => {
   let session;
@@ -20,9 +22,9 @@ describe('Session Class', () => {
   });
 
   test('setStory sets story correctly', () => {
-    const story = 'Story details';
-    session.setStory(story);
-    expect(session.story).toBe(story);
+    expectedStory = new Story("story", "blah blah blah");
+    session.setStory(expectedStory);
+    expect(session.story).toBe(expectedStory);
   });
 
   test('creatorCanEstimate creator is added to users', () => {
@@ -42,8 +44,7 @@ describe('Session Class', () => {
  
   test('addEstimate user estimates with valid points', () => {
     expected_estimation = 3;
-    const story = 'Story details';
-    session.setStory(story);
+    session.setStory(new Story("story", "blah blah blah"));
     const newUser = new User('Cortana', 'cortana@test.com');
     session.addUser(newUser);
     session.addEstimate(newUser.id, expected_estimation);
@@ -53,8 +54,7 @@ describe('Session Class', () => {
 
   test('addEstimate user estimates with invalid points', () => {
     expected_estimation = 4;
-    const story = 'Story details';
-    session.setStory(story);
+    session.setStory(new Story("story", "blah blah blah"));
     const newUser = new User('Cortana', 'cortana@test.com');
     session.addUser(newUser);
     const sut = () => {
@@ -67,8 +67,7 @@ describe('Session Class', () => {
 
   test('getUsersWithEstimations all users estimated', () => {
     expected_estimation = 3;
-    const story = 'Story details';
-    session.setStory(story);
+    session.setStory(new Story("story", "blah blah blah"));
     const newUser = new User('Cortana', 'cortana@test.com');
     session.addUser(newUser);
     session.addEstimate(newUser.id, expected_estimation);
@@ -79,8 +78,7 @@ describe('Session Class', () => {
 
   test('getUsersWithEstimations not all users estimated', () => {
     expected_estimation = 3;
-    const story = 'Story details';
-    session.setStory(story);
+    session.setStory(new Story("story", "blah blah blah"));
     const newUser = new User('Cortana', 'cortana@test.com');
     session.addUser(newUser);
     session.addEstimate(newUser.id, expected_estimation);
@@ -89,30 +87,41 @@ describe('Session Class', () => {
     expect(estimated).toEqual([newUser].map(({ id, name }) => ({ id, name })));
   });
 
-  test('revealEstimations all users estimated', () => {
+  test('revealEstimates all users estimated', () => {
     expected_estimation = 3;
-    const story = 'Story details';
-    session.setStory(story);
+    session.setStory(new Story("story", "blah blah blah"));
     const newUser = new User('Cortana', 'cortana@test.com');
     session.addUser(newUser);
     session.addEstimate(newUser.id, expected_estimation);
     session.creatorCanEstimate();
     session.addEstimate(user.id, 5);
-    const estimates = session.revealEstimations();
+    const estimates = session.revealEstimates();
     expect(estimates).toEqual(Object.values(session.users).map(({ id, name, estimate }) => ({ id, name, estimate})));
   });
 
 
-  test('revealEstimations not all users estimated', () => {
+  test('revealEstimates not all users estimated', () => {
     expected_estimation = 3;
-    const story = 'Story details';
-    session.setStory(story);
+    session.setStory(new Story("story", "blah blah blah"));
     const newUser = new User('Cortana', 'cortana@test.com');
     session.addUser(newUser);
     session.addEstimate(newUser.id, expected_estimation);
     session.creatorCanEstimate();
-    const estimates = session.revealEstimations();
+    const estimates = session.revealEstimates();
     expect(estimates).toEqual({});
+  });
+
+
+  test('getEstimationAverage not all users estimated', () => {
+    estimate1 = 3, estimate2 = 5;
+    session.setStory(new Story("story", "blah blah blah"));
+    const newUser = new User('Cortana', 'cortana@test.com');
+    session.addUser(newUser);
+    session.addEstimate(newUser.id, estimate1);
+    session.creatorCanEstimate();
+    session.addEstimate(user.id, estimate2);
+    const estimateAverage = session.getEstimationAverage();
+    expect(estimateAverage).toBe((estimate1 + estimate2)/2);
   });
 
 

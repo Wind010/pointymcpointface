@@ -34,10 +34,18 @@ class Session {
       this.users[this.owner.id] = this.owner;
     }
 
+   /**
+   * Set the story for the session to be estimated on.
+   * @param {Story} story - The story/item to add to session.
+   */
     setStory(story) {
       this.story = story
     }
-  
+
+   /**
+   * Add a user to the session.
+   * @param {User} user - The user to add to session.
+   */
     addUser(user) {
       this.users[user.id] = user;
     }
@@ -86,10 +94,13 @@ class Session {
       // Destructure syntax to pull out the properties and construct a new object with those properties.
       return usersWithEstimates.map(({ id, name }) => ({ id, name }));
     }
-
     
-
-    revealEstimations() {
+    /**
+     * Retrieves estimations from users who have estimated a story.
+     * If not all users have estimated, returns an empty object.
+     * @returns {Object[]} - An array of user estimations with their IDs, names, and estimates.
+     */
+    revealEstimates() {
       if (this.getUsersWithEstimations().length !== Object.keys(this.users).length) {
         console.log("Not all users have estimated.")
         return {};
@@ -106,9 +117,15 @@ class Session {
       return userEstimates;
     }
 
+
+   /**
+   * Calculates the average estimation value among all users.
+   * @returns {number} - The average estimation value.
+   */
     getEstimationAverage() {
-      const sum = Object.values(this.users).reduce((accumulator, currentEstimation) => accumulator + currentEstimation, 0);
-      return sum / this.users.length;
+      let usersArray = Object.values(this.users);
+      const sum = usersArray.reduce((total, user) => total + user.estimate, 0);
+      return sum / usersArray.length;
     }
 }
 

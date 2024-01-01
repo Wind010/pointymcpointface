@@ -1,7 +1,6 @@
 const SessionManager = require('../models/sessionManager');
-const {Session} = require('../models/session');
 const UserManager = require('../models/userManager');
-const User = require('../models/user');
+const Story = require('../models/story');
 
 
 /**
@@ -53,6 +52,24 @@ exports.joinSession = (req, res) => {
 };
 
 
+exports.setStory = async (req, res) => {
+  const id = req.params.id;
+
+  // Let any user set the story for now.
+  //const userId = req.body.userId;
+  //const user = UserManager.getInstance().getUserById(userId);
+
+  const { name, description } = req.body;
+  const session = SessionManager.getInstance().getSessionById(id);
+  
+  if (session) {
+    session.setStory(new Story(name, description));
+    res.status(200).json({ message: 'Story set in session successfully', id: session.id, storyName: name });
+  } else {
+    res.status(404).json({ message: 'Session not found' });
+  }
+};
+
 
 /**
  * Estimates a story/item within a planning poker session.
@@ -86,15 +103,15 @@ exports.estimate = (req, res) => {
  * @param {Response} res - Express response object.
  */
 exports.revealEstimates = (req, res) => {
-  const { sessionId } = req.params;
+  const id = req.params.id;
  
-  const session = SessionManager.getInstance().getSessionById(sessionId);
+  const session = SessionManager.getInstance().getSessionById(id);
 
   if (session) {
     const estimates = session.revealEstimates();
+    const estimateAverage = session.getEstimationAverage();
 
-
-    res.status(200).json({ message: 'Estimates revealed successfully', estimates, average: });
+    res.status(200).json({ message: 'Estimates revealed successfully', estimates, average: estimateAverage});
   } else {
     res.status(404).json({ message: 'Session not found' });
   }
