@@ -45,6 +45,11 @@ Join a session for a user that isn't the creator of session:
 curl -X PUT -H "Content-Type: application/json" -d "{\"userId\": \"$userId2\"}" "$baseUrl/api/session/$sessionId"
 ```
 
+Estimate on story in session:
+```sh
+estimateValue=3
+curl -X POST -H "Content-Type: application/json" -d "{\"userId\": \"$userId2\", \"estimate\": $estimateValue}" "$baseUrl/api/session/$sessionId/estimate"
+```
 
 
 Reveal estimates:
